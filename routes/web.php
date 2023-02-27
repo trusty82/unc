@@ -19,6 +19,5 @@ Route::get('/', function () {
 })->name('index');
 
 
-
 Route::resource('new', NewController::class);
 

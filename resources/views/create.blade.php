@@ -64,6 +64,9 @@
                                                     <strong>{{$message}}</strong>
                                                 </div>
                                             @endif
+
+{{--                                            @dump($departementale)--}}
+                                            <!-- RNA / TITRE -->
                                             <div class="row">
                                                 <div class="form-group col-lg-3">
                                                     <label class="form-label mb-1 text-2">N° RNA</label>
@@ -85,6 +88,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!-- ADRESSE / ADRESSE 2 -->
                                             <div class="row">
                                                 <div class="form-group col-lg-6">
                                                     <label class="form-label mb-1 text-2">Adresse</label>
@@ -105,6 +109,7 @@
                                                 </div>
 
                                             </div>
+                                            <!-- CODE POSTALE / VILLE -->
                                             <div class="row">
                                                 <div class="form-group col-lg-4">
                                                     <label class="form-label mb-1 text-2">Code Postal</label>
@@ -116,60 +121,16 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-lg-4">
-                                                    <label class="form-label">Ville</label>
+                                                    <label class="form-label mb-1 text-2">Ville</label>
                                                     <div class="position-relative">
-                                                        <i class="icons icon-location-pin text-color-primary text-3 position-absolute left-15 top-50pct transform3dy-n50 z-index-1"></i>
-                                                        <div class="custom-select-1">
-                                                            <select id="cities" name="cities"
-                                                                    class="form-select form-control h-auto" required>
-                                                                <option value="">-- Choisir votre ville --</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-4">
-                                                    <label class="form-label mb-1 text-2">Téléphone</label>
-                                                    <div class="position-relative">
-                                                        <i class="icons icon-phone text-color-primary text-3 position-absolute left-15 top-50pct transform3dy-n50"></i>
-                                                        <input type="tel" id="phone" name="phone"
-                                                               class="form-control text-3 h-auto py-2" required>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-                                            <div class="row">
-                                                <legend class="col-form-label col-sm-2 pt-0">Type d'association</legend>
-                                                <div class="col-lg-4">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="type"
-                                                               id="gridRadios1" value="department">
-                                                        <label class="form-check-label" for="gridRadios1">
-                                                            Départementale
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="radio" name="type"
-                                                               id="gridRadios2" value="section">
-                                                        <label class="form-check-label" for="gridRadios2">
-                                                            Section Locale
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-lg-4 assodepart" hidden>
-                                                    <label class="form-label">Association départementale</label>
-                                                    <div class="position-relative">
-                                                        <i class="icons icon-location-pin text-color-primary text-3 position-absolute left-15 top-50pct transform3dy-n50 z-index-1"
-                                                           hidden></i>
-                                                        <div class="custom-select-1">
-                                                            <select id="assodepartement" name="assodepartement"
-                                                                    class="form-select form-control h-auto">
-                                                                <option value=""></option>
-                                                            </select>
-                                                        </div>
+                                                        <i class="icons icon-location-pin text-color-primary text-3 position-absolute left-15 top-50pct transform3dy-n50"></i>
+                                                        <input id="cities" type="text" pattern="[0-9]{5}" value=""
+                                                               maxlength="5" class="form-control text-3 h-auto py-2"
+                                                               name="cities" required readonly>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!-- LOGO / IMG LOGO -->
                                             <div class="row">
                                                 <div class="form-group col-4">
                                                     <label class="form-label mb-1 text-2">Logo</label>
@@ -181,21 +142,11 @@
                                                 </div>
                                                 <div class="form-group col-4">
                                                     <div class="position-relative">
-                                                        <img src="" id="img-logo" name="img-logo"
-                                                             class="form-control text-3 h-auto py-2">
+                                                        <img src="" id="img-logo" class="form-control text-3 h-auto py-2">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="form-group col-4">
-                                                    <label class="form-label mb-1 text-2">Email</label>
-                                                    <div class="position-relative">
-                                                        <i class="icons icon-envelope-letter text-color-primary text-3 position-absolute left-15 top-50pct transform3dy-n50"></i>
-                                                        <input type="mail" id="mail" name="mail"
-                                                               class="form-control text-3 h-auto py-2" required>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <!-- AGREE -->
                                             <div class="row">
                                                 <div class="form-group col">
                                                     <div class="form-check">
@@ -206,6 +157,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!-- SUBMIT -->
                                             <div class="row">
                                                 <div class="form-group col">
                                                     <input type="submit" value="Valider" class="btn btn-primary"
@@ -279,9 +231,9 @@
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('name').value = data.association.titre;
-                    document.getElementById('address').value = data.association.adresse_gestion_libelle_voie;
+                    document.getElementById('address').value = data.association.adresse_gestion_libelle_voie.toUpperCase();
                     document.getElementById('zipcode').value = data.association.adresse_gestion_code_postal;
-                    document.getElementById('cities').value = data.association.adresse_gestion_acheminement;
+                    document.getElementById('cities').value = data.association.adresse_gestion_acheminement.toUpperCase();
                     document.getElementById('email').value = data.association.email;
                     document.getElementById('phone').value = data.association.telephone;
                     document.getElementById('website').value = data.association.site_internet;
@@ -300,52 +252,7 @@
 
         });
 
-        const select = document.getElementById("cities");
-        select.addEventListener('focus', () => {
-
-            const value = codePostal.value;
-            select.innerHTML = '<option value="">-- Choisir votre ville --</option>';
-            const data = "{{asset('laposte_hexasmal.json')}}";
-            fetch(data)
-                .then(response => response.json())
-                .then(data => {
-                    const results = data.filter(result => result.code_postal === value);
-                    results.forEach(result => {
-                        const city = {
-                            nom_de_la_commune: result.nom_de_la_commune,
-                            code_postal: result.code_postal
-                        };
-                        const option = document.createElement("option");
-                        option.value = city.nom_de_la_commune;
-                        option.text = `${city.nom_de_la_commune} (${city.code_postal})`;
-                        select.add(option);
-                    });
-                })
-                .catch(error => console.error(error));
-        });
-
         const codePostal = document.getElementById('zipcode');
-        codePostal.addEventListener('input', function (e) {
-            const value = codePostal.value;
-            select.innerHTML = '<option value="">-- Choisir votre ville --</option>';
-            const data = "{{asset('laposte_hexasmal.json')}}";
-            fetch(data)
-                .then(response => response.json())
-                .then(data => {
-                    const results = data.filter(result => result.code_postal === value);
-                    results.forEach(result => {
-                        const city = {
-                            nom_de_la_commune: result.nom_de_la_commune,
-                            code_postal: result.code_postal
-                        };
-                        const option = document.createElement("option");
-                        option.value = city.nom_de_la_commune;
-                        option.text = `${city.nom_de_la_commune} (${city.code_postal})`;
-                        select.add(option);
-                    });
-                })
-                .catch(error => console.error(error));
-        });
         codePostal.addEventListener('focus', () => {
             codePostal.style.border = '2px solid green';
         });
@@ -354,7 +261,7 @@
 
         });
 
-        const titre = document.getElementById('titre');
+        const titre = document.getElementById('name');
         titre.addEventListener('focus', () => {
             name.style.border = '2px solid green';
         });
@@ -379,8 +286,6 @@
         });
 
         const logo = document.getElementById('logo');
-        const img = document.getElementById('img-logo');
-
         logo.addEventListener('change', function () {
             const file = this.files[0];
             if (file) {
@@ -391,6 +296,7 @@
                 reader.readAsDataURL(file);
             }
         });
+        const img = document.getElementById('img-logo');
 
         const agree = document.getElementById('agree');
         agree.addEventListener('change', function () {
@@ -401,51 +307,10 @@
             }
         });
 
-        // A Optimiser
-        const gridRadios2 = document.getElementById('gridRadios2');
-        gridRadios2.addEventListener('change', function () {
-            if (gridRadios2.checked) {
-                let element = document.querySelector('.assodepart');
-                element.removeAttribute('hidden');
-
-                const association = <?php echo json_encode($association); ?>;
-                const departments = association.filter(asso => asso.Type === 'department');
-                const zipcode = document.getElementById('zipcode').value;
-                const first2digitZipcode = zipcode.slice(0, 2);
-                const departments2digit = departments.map(depart => depart.PostalCode.slice(0, 2));
-
-                if (departments2digit.includes(first2digitZipcode)) {
-                    const department = departments.filter(depart => depart.PostalCode.slice(0, 2) === first2digitZipcode);
-                    const select = document.getElementById('assodepartement');
-                    select.innerHTML = '<option value="">-- Choisir votre département --</option>';
-                    department.forEach(depart => {
-                        const option = document.createElement('option');
-                        option.value = depart.Name;
-                        option.text = depart.Name;
-                        select.add(option);
-                    });
-                } else {
-                    const select = document.getElementById('assodepartement');
-                    select.innerHTML = '<option value="">-- Choisir votre département --</option>';
-                    departments.forEach(depart => {
-                        const option = document.createElement('option');
-                        option.value = depart.Name;
-                        option.text = depart.Name;
-                        select.add(option);
-                    });
-                }
-            }
+        const cities = document.getElementById('cities');
+        cities.addEventListener('input', function (e) {
+            cities.value = cities.value.toUpperCase();
         });
-
-        const gridRadios1 = document.getElementById('gridRadios1');
-        gridRadios1.addEventListener('change', function () {
-            if (gridRadios1.checked) {
-                console.log('Departement checked, add hidden');
-                let element = document.querySelector('.assodepart');
-                element.setAttribute('hidden', 'true');
-            }
-        });
-
 
     </script>
 

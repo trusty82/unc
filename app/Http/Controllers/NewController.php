@@ -8,39 +8,23 @@ use Illuminate\Support\Facades\Http;
 
 class NewController extends Controller
 {
-    public string $bearerToken = "";
-    public int $tokenExpirationEpoch = 0;
-
-    public function getBearerToken()
-    {
-        $response = Http::withOptions([
-            'verify' => false
-        ])->asForm()->withHeaders([
-            'Authorization' => 'Basic VEhVRHN5b3ZRS29Wc0N3TE1KWUNKaU9MdFRjYTp6OTVYcUJjTnlnQW1PSjF6aGZNWGw3Rlo3dzhh'
-        ])->post('https://api.insee.fr/token', [
-            'grant_type' => 'client_credentials'
-        ]);
-
-        if ($response->successful()) {
-            $data = $response->json();
-            $this->bearerToken = $data['access_token'];
-        } else {
-            // Gérer les erreurs de la requête
-            $status = $response->status();
-            $errorMessage = $response->body();
-        }
-    }
-
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-
         $association = Association::all();
+        $departementaleURL = "https://entreprise.data.gouv.fr/api/rna/v1/full_text/UNION%20NATIONALE%20DES%20COMBATTANTS%20DU%20DEPARTEMENT?per_page=50";
 
-        return view('create', compact('association'));
+        $departementale = Http::withHeaders([
+            'accept' => 'application/json'
+        ])
+            ->get($departementaleURL)
+            ->json();
+
+
+
+        return view('create', compact('association', 'departementale'));
     }
 
     /**
@@ -56,7 +40,9 @@ class NewController extends Controller
      */
     public function store(Request $request)
     {
-        $siret = str_replace('-', '', $request->siret);
+
+
+        $rna = str_replace('-', '', $request->rna);
 
         /*$this->getBearerToken();
         $name = Http::withHeaders([
@@ -69,7 +55,7 @@ class NewController extends Controller
         $name = Http::withHeaders([
             'accept' => 'application/json'
         ])
-            ->get("https://entreprise.data.gouv.fr/api/rna/v1/id/" . $siret)
+            ->get("https://entreprise.data.gouv.fr/api/rna/v1/id/" . $rna)
             ->json();
 
         $titre = $name['association']['titre'];
@@ -78,39 +64,43 @@ class NewController extends Controller
         $adresse_libelle_commune = $name['association']['adresse_libelle_commune'];
         $adresse_gestion_libelle_voie = $name['association']['adresse_gestion_libelle_voie'];
 
-
-
-
-        // if $name is empty get $request->name
-        if (empty($name)) {
-            $name = $request->name;
+        if (empty($titre)) {
+            $titre = $request->titre;
         }
 
-        $slug = str_replace(' ', '-', $titre);
-        $nia = substr($request->zipcode, 0, 2) . substr($siret, 0, 3) . '-' . rand(100000000, 999999999);
+        $slug = str_replace(' ', '-', $titrecourt);
+        $nia = substr($request->zipcode, 0, 2) . substr($rna, 0, 3) . '-' . rand(100000000, 999999999);
+
+        if (strpos($titre, 'DEPARTEMENT') !== false)
+        {
+            $type = 'Départementale';
+        } else {
+            $type = 'Locale';
+        }
+
 
         try {
-            if (Association::where('Siret', $request->siret)->exists()) {
+            if (Association::where('Siret', $request->rna)->exists()) {
                 throw new \Exception('Cette association existe déjà');
             }
             Association::create([
                 'Name' => $titre,
                 'Slug' => $slug,
                 'NIA' => $nia,
-                'SIRET' => $siret,
+                'SIRET' => $rna,
                 'Address' => $adresse_gestion_libelle_voie,
                 'Address2' => $request->address2,
                 'PostalCode' => $adresse_code_postal,
                 'City' => $adresse_libelle_commune,
                 'Phone' => $request->phone,
-                'Type' => $request->type,
+                'Type' => $type,
                 'Logo' => $request->logo,
                 'Website' => $request->website,
                 'Email' => $request->mail,
                 'Agree' => $request->agree,
             ]);
 
-            return redirect()->route('index')->with('success', 'L\'association ' . $name . ' a été ajoutée');
+            return redirect()->route('index')->with('success', 'L\'association ' . $titrecourt . ' a été ajoutée');
 
         } catch (\Exception $e) {
 //            return redirect()->back()->with('error', 'L\'association ' . $name . ' existe déjà');
