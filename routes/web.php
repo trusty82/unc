@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\NewController;
+use App\Http\Controllers\SocialiteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +19,8 @@ Route::get('/', function () {
     return view('index');
 })->name('index');
 
-
+Route::get("login-register", [SocialiteController::class, 'loginRegister'])->name('socialite.login-register');
 Route::resource('new', NewController::class);
 
+Route::get('/auth/github', [SocialiteController::class, 'redirectToProvider'])->name('github.auth');
+Route::get('/auth/github/callback', [SocialiteController::class, 'handleProviderCallback'])->name('github.redirect');

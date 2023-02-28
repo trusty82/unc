@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Association;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Laravel\Socialite\Facades\Socialite;
 
 class NewController extends Controller
 {
@@ -12,7 +13,9 @@ class NewController extends Controller
      * Display a listing of the resource.
      */
     public function index()
+
     {
+
         $association = Association::all();
         $departementaleURL = "https://entreprise.data.gouv.fr/api/rna/v1/full_text/UNION%20NATIONALE%20DES%20COMBATTANTS%20DU%20DEPARTEMENT?per_page=50";
 
